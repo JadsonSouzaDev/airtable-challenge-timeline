@@ -1,8 +1,10 @@
 import { Lane } from "./index";
-
+import { useState } from "react";
 const Lanes = ({ lanes, days, selectedMonthIndex, months }) => {
+  const [selectedLane, setSelectedLane] = useState(null);
+
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 z-10">
       {lanes.map((lane, key) => (
         <div
           key={key}
@@ -15,6 +17,8 @@ const Lanes = ({ lanes, days, selectedMonthIndex, months }) => {
               item={item}
               selectedMonthIndex={selectedMonthIndex}
               months={months}
+              isSelected={selectedLane?.id === item.id}
+              setSelectedLane={setSelectedLane}
             />
           ))}
         </div>

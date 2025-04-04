@@ -1,6 +1,15 @@
 import { getDateUTC } from "../assignLanes";
+import { useState, useRef, useEffect } from "react";
 
-const Lane = ({ item, selectedMonthIndex, months }) => {
+const Lane = ({
+  item,
+  selectedMonthIndex,
+  months,
+  isSelected,
+  setSelectedLane,
+}) => {
+  const [name, setName] = useState(item.name);
+  const laneRef = useRef(null);
   const start = getDateUTC(item.start);
   const end = getDateUTC(item.end);
   let startModified = false;
@@ -42,15 +51,54 @@ const Lane = ({ item, selectedMonthIndex, months }) => {
       ? gridColumnStart + durationInDays + 1
       : gridColumnStart + 1;
 
+  // Handle click outside
+  useEffect(() => {
+    if (!isSelected) return;
+
+    const handleClickOutside = (event) => {
+      if (laneRef.current && !laneRef.current.contains(event.target)) {
+        setSelectedLane(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isSelected, setSelectedLane]);
+
+  // Handle key press
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      setSelectedLane(null);
+    }
+  };
+
   return (
     <div
+      ref={laneRef}
       key={item.id}
-      className={`bg-red-200 flex flex-row items-center justify-center gap-4 px-2 h-8 ${
-        !startModified ? "rounded-s-lg" : ""
-      } ${!endModified ? "rounded-e-lg" : ""}`}
+      onClick={() => setSelectedLane(item)}
+      className={`cursor-pointer  border-2  flex flex-row items-center justify-center gap-4 px-2 h-10 ${
+        isSelected
+          ? "bg-blue-500 border-blue-500 text-white"
+          : "bg-white border-blue-300 text-blue-500 hover:bg-blue-50 hover:border-blue-100"
+      } ${!startModified ? "rounded-s-lg" : ""} ${
+        !endModified ? "rounded-e-lg" : ""
+      }`}
       style={{ gridColumnStart, gridColumnEnd }}
     >
-      <span className="text-xs truncate">{item.name}</span>
+      {!isSelected && <span className="text-xs truncate font-semibold">{name}</span>}
+      {isSelected && (
+        <input 
+          type="text" 
+          className="w-full bg-transparent border-none outline-none" 
+          value={name} 
+          onChange={(e) => setName(e.target.value)}
+          onKeyDown={handleKeyDown}
+          autoFocus
+        />
+      )}
     </div>
   );
 };
