@@ -14,7 +14,8 @@
 - I would improve how the time samples are sliced, maybe by **weeks** or **fortnights**, to make it easier to read.
 - I would use **TypeScript** for better type safety and tooling support.
 - I would **componentize basic elements** like buttons and text to maintain consistent styling and simplify design decisions.
-- Although I started implementing features like **inline editing**, there wasn’t enough time to persist the changes globally — but it is possible to simulate the behavior.
+- I would implement proper **accessibility features** (ARIA tags, keyboard navigation, screen reader support) to make the timeline usable for everyone.
+- Although I started implementing features like **inline editing**, there wasn't enough time to persist the changes globally — but it is possible to simulate the behavior.
 - I really liked the **month pagination**, which already adds a lot of simplicity to the overall timeline view.
 
 ---
@@ -57,7 +58,7 @@
     npm start
     ```
 
-## Future enhancements I’d like to add
+## Future enhancements I'd like to add
 - Zoom in/out on the timeline
 - Drag-and-drop to adjust event dates
 - Inline editing with persistent state
