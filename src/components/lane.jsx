@@ -1,5 +1,6 @@
 import { getDateUTC } from "../assignLanes";
 import { useState, useRef, useEffect } from "react";
+import { Pencil } from "lucide-react";
 
 const Lane = ({
   item,
@@ -9,6 +10,7 @@ const Lane = ({
   setSelectedLane,
 }) => {
   const [name, setName] = useState(item.name);
+  const [isHovering, setIsHovering] = useState(false);
   const laneRef = useRef(null);
   const start = getDateUTC(item.start);
   const end = getDateUTC(item.end);
@@ -79,7 +81,9 @@ const Lane = ({
       ref={laneRef}
       key={item.id}
       onClick={() => setSelectedLane(item)}
-      className={`cursor-pointer  border-2  flex flex-row items-center justify-center gap-4 px-2 h-10 ${
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+      className={`cursor-pointer border-2 flex flex-row items-center justify-center gap-4 px-2 h-10 relative ${
         isSelected
           ? "bg-blue-500 border-blue-500 text-white"
           : "bg-white border-blue-300 text-blue-500 hover:bg-blue-50 hover:border-blue-100"
@@ -88,12 +92,27 @@ const Lane = ({
       }`}
       style={{ gridColumnStart, gridColumnEnd }}
     >
-      {!isSelected && <span className="text-xs truncate font-semibold">{name}</span>}
+      {!isSelected && (
+        <>
+          <span className="text-xs truncate font-semibold">{name}</span>
+          {isHovering && !isSelected && (
+            <button
+              className="absolute right-1 bg-blue-100 text-blue-700 rounded-full w-6 h-6 flex items-center justify-center"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedLane(item);
+              }}
+            >
+              <Pencil className="w-4 h-4" />
+            </button>
+          )}
+        </>
+      )}
       {isSelected && (
-        <input 
-          type="text" 
-          className="w-full bg-transparent border-none outline-none" 
-          value={name} 
+        <input
+          type="text"
+          className="w-full bg-transparent border-none outline-none text-xs font-semibold"
+          value={name}
           onChange={(e) => setName(e.target.value)}
           onKeyDown={handleKeyDown}
           autoFocus
