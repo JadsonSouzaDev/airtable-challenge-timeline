@@ -10,7 +10,6 @@ export const assignLanes = (items, month, year) => {
       (getDateUTC(item.end).getMonth() === month &&
       getDateUTC(item.end).getFullYear() === year)
   );
-  console.log(intervalItems);
   const sortedItems = intervalItems.sort(
     (a, b) => new Date(a.start) - new Date(b.start)
   );
